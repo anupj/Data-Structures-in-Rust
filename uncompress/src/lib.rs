@@ -48,6 +48,8 @@ pub fn uncompress_without_iter(pattern: &str) -> String {
     let mut j = 0usize;
 
     while j < pattern.len() {
+        // get the `j`th character from the input
+        // string
         let letter = pattern.chars().nth(j).unwrap();
         if NUMS.contains(letter) {
             // if `j` is pointing to a number
