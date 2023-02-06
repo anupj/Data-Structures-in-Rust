@@ -33,6 +33,40 @@ pub fn uncompress(pattern: &str) -> String {
         .collect()
 }
 
+/// Same input and output as `uncompress()`
+/// but without relying so much on iterators
+pub fn uncompress_without_iter(pattern: &str) -> String {
+    let mut result: Vec<String> = Vec::new();
+
+    const NUMS: &str = "0123456789";
+    // index to track the number
+    // in the string
+    let mut i = 0usize;
+
+    // index to track the letter
+    // in the string
+    let mut j = 0usize;
+
+    while j < pattern.len() {
+        let letter = pattern.chars().nth(j).unwrap();
+        if NUMS.contains(letter) {
+            // if `j` is pointing to a number
+            // then move on
+            j += 1;
+        } else {
+            // if `j` is pointing to a letter
+            // i.e. non-numeric char then
+            // grab the number before the letter
+            // and repeat the character
+            let num = pattern.get(i..j).unwrap().parse::<usize>().unwrap();
+            result.push(letter.to_string().repeat(num));
+            j += 1;
+            i = j;
+        }
+    }
+    result.join("")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -46,6 +80,19 @@ mod tests {
         assert_eq!(uncompress("127y"), "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
         assert_eq!(
             uncompress("10a12b13c"),
+            "aaaaaaaaaabbbbbbbbbbbbccccccccccccc"
+        )
+    }
+
+    #[test]
+    fn test_uncompress_without_iter() {
+        assert_eq!(uncompress_without_iter("3n12e2z"), "nnneeeeeeeeeeeezz");
+        assert_eq!(uncompress_without_iter("2c3a1t"), "ccaaat");
+        assert_eq!(uncompress_without_iter("4s2b"), "ssssbb");
+        assert_eq!(uncompress_without_iter("2p1o5p"), "ppoppppp");
+        assert_eq!(uncompress_without_iter("127y"), "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+        assert_eq!(
+            uncompress_without_iter("10a12b13c"),
             "aaaaaaaaaabbbbbbbbbbbbccccccccccccc"
         )
     }
