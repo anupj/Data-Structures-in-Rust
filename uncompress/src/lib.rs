@@ -26,9 +26,7 @@ pub fn uncompress(pattern: &str) -> String {
             // conver the `&str` to `String`
             // and return the values repeated
             // `num_times`
-            character
-                .to_string()
-                .repeat(num_times.parse::<usize>().unwrap())
+            character.to_string().repeat(num_times.parse::<usize>().unwrap())
         })
         .collect()
 }

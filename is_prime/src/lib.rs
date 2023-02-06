@@ -1,4 +1,4 @@
-use std::{num, usize};
+use std::usize;
 
 /// Primes are integers greater than one
 /// with no positive divisors besides one
