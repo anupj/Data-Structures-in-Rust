@@ -1,5 +1,9 @@
 use std::collections::HashMap;
 
+// given two strings, check if they are
+// anagrams
+// Time: O(n + m) => two loops of size n and m
+// Space: O(n)
 pub fn anagrams(left: &str, right: &str) -> bool {
     let mut left_map: HashMap<char, u32> = HashMap::new();
     let mut right_map: HashMap<char, u32> = HashMap::new();

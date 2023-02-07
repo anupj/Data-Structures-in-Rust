@@ -1,6 +1,7 @@
-# Data structures in Rust
-Practice implementing data structures in Rust
 
+# Data structures in Rust
+
+Practice implementing data structures in Rust.
 
 ## License
 
