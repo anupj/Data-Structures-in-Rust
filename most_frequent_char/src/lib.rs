@@ -6,6 +6,9 @@ use std::collections::HashMap;
 /// If there are ties, return the
 /// character that appears earlier in the string.
 ///You can assume that the input string is non-empty.
+/// Complexity:
+/// Time = O(n)
+/// Space = O(n)
 pub fn most_frequent_char(s: &str) -> char {
     let mut char_map: HashMap<char, u32> = HashMap::new();
 
