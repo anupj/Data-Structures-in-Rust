@@ -8,19 +8,28 @@ use std::collections::HashMap;
 ///You can assume that the input string is non-empty.
 pub fn most_frequent_char(s: &str) -> char {
     let mut char_map: HashMap<char, u32> = HashMap::new();
+
+    // Insert the individual characters
+    // and its frequency of occurrence
+    // in a map
     for ch in s.chars() {
         char_map.entry(ch).and_modify(|counter| *counter += 1).or_insert(1);
     }
 
-    let mut result = &'a';
-    let mut count = 0u32;
-    for ch in char_map.keys() {
-        if char_map.get(ch).unwrap() > &count {
-            result = ch;
-            count = *char_map.get(ch).unwrap();
+    let mut most_frequent = ' ';
+
+    // parse the original string
+    // and check the count for each
+    // in order;
+    for ch in s.chars() {
+        if most_frequent == ' '
+            || char_map.get(&ch) > char_map.get(&most_frequent)
+        {
+            most_frequent = ch;
         }
     }
-    result.to_owned()
+
+    most_frequent
 }
 
 #[cfg(test)]
