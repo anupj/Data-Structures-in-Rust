@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{borrow::Cow, collections::HashSet};
 
 /// The function takes in two arrays, a,b,
 /// as arguments. The function should return
@@ -8,14 +8,29 @@ use std::collections::HashSet;
 /// You may assume that each input array
 /// does not contain duplicate elements.
 pub fn intersection<'a>(left: &'a [u32], right: &'a [u32]) -> Vec<u32> {
-    let left_set: HashSet<u32> = left.iter().cloned().collect();
-    let right_set: HashSet<u32> = right.iter().cloned().collect();
-
-    let mut result: Vec<u32> =
-        left_set.intersection(&right_set).into_iter().cloned().collect();
+    let mut result: Vec<u32> = left
+        .iter()
+        .collect::<HashSet<_>>()
+        .intersection(&right.iter().collect())
+        .map(|&&v| v)
+        .collect();
     result.sort();
-
     result
+}
+
+/// Alternate implementation using `Cow` 🐄
+/// see [here]( https://stackoverflow.com/questions/75394760/returning-an-array-slice-of-u32-from-a-function )
+pub fn intersection_with_cow<'a>(
+    left: &'a [u32],
+    right: &'a [u32],
+) -> Cow<'a, [u32]> {
+    Cow::Owned(
+        left.iter()
+            .collect::<HashSet<_>>()
+            .intersection(&right.iter().collect())
+            .map(|&&v| v)
+            .collect(),
+    )
 }
 
 #[cfg(test)]
@@ -41,5 +56,13 @@ mod tests {
             c.push(i as u32);
         }
         assert_eq!(intersection(a, b), c);
+    }
+
+    #[test]
+    fn test_intersection_with_cow() {
+        let mut result =
+            intersection_with_cow(&[4, 2, 1, 6], &[3, 6, 9, 2, 10]).to_vec();
+        result.sort();
+        assert_eq!(result, &[2, 6]);
     }
 }
