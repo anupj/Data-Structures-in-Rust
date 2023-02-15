@@ -21,7 +21,7 @@ pub fn depth_first_values(root: TreeNodeRef) -> Vec<i32> {
     // println!("The root node is {:?}", root);
     let mut result = Vec::new();
     let mut stack = vec![root];
-    while stack.len() > 0 {
+    while !stack.is_empty() {
         let current: Rc<RefCell<TreeNode>> = stack.pop().unwrap();
         result.push(current.borrow().val);
 
@@ -93,5 +93,37 @@ mod tests {
             &[20, 30, 50, 60, 80, 40, 70]
         );
     }
-}
 
+    #[test]
+    fn test_depth_first_values_02() {
+        let node_a = TreeNode { val: 20, left: None, right: None };
+        assert_eq!(depth_first_values(Rc::new(RefCell::new(node_a))), &[20]);
+    }
+
+    #[test]
+    fn test_depth_first_values_03() {
+        let mut node_a = TreeNode { val: 20, left: None, right: None };
+        let mut node_b = TreeNode { val: 30, left: None, right: None };
+        let mut node_c = TreeNode { val: 40, left: None, right: None };
+        let mut node_d = TreeNode { val: 50, left: None, right: None };
+        let node_e = TreeNode { val: 60, left: None, right: None };
+
+        //      a
+        //       \
+        //        b
+        //       /
+        //      c
+        //       \
+        //        d
+        //         \
+        //          e
+        node_d.right = Some(Rc::new(RefCell::new(node_e)));
+        node_c.right = Some(Rc::new(RefCell::new(node_d)));
+        node_b.left = Some(Rc::new(RefCell::new(node_c)));
+        node_a.right = Some(Rc::new(RefCell::new(node_b)));
+        assert_eq!(
+            depth_first_values(Rc::new(RefCell::new(node_a))),
+            &[20, 30, 40, 50, 60]
+        );
+    }
+}
