@@ -1,4 +1,4 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, collections::VecDeque, rc::Rc};
 
 type TreeNodeRef = Rc<RefCell<TreeNode>>;
 /// Represents a binary tree
@@ -20,16 +20,17 @@ pub struct TreeNode {
 pub fn breadth_first_values(root: TreeNodeRef) -> Vec<i32> {
     // println!("The root node is {:?}", root);
     let mut result = Vec::new();
-    let mut queue = vec![root];
+    let mut queue: VecDeque<TreeNodeRef> = VecDeque::new();
+    queue.push_back(root);
     while !queue.is_empty() {
-        let current: Rc<RefCell<TreeNode>> = queue.remove(0);
+        let current: Rc<RefCell<TreeNode>> = queue.pop_front().unwrap();
         result.push(current.borrow().val);
 
         if let Some(left) = &current.borrow().left {
-            queue.push(left.to_owned());
+            queue.push_back(left.to_owned());
         };
         if let Some(right) = &current.borrow().right {
-            queue.push(right.to_owned());
+            queue.push_back(right.to_owned());
         };
     }
     result
@@ -41,36 +42,12 @@ mod tests {
 
     #[test]
     fn test_breadth_first_values_00() {
-        let mut node_a = TreeNode {
-            val: 20,
-            left: None,
-            right: None,
-        };
-        let mut node_b = TreeNode {
-            val: 30,
-            left: None,
-            right: None,
-        };
-        let mut node_c = TreeNode {
-            val: 40,
-            left: None,
-            right: None,
-        };
-        let node_d = TreeNode {
-            val: 50,
-            left: None,
-            right: None,
-        };
-        let node_e = TreeNode {
-            val: 60,
-            left: None,
-            right: None,
-        };
-        let node_f = TreeNode {
-            val: 70,
-            left: None,
-            right: None,
-        };
+        let mut node_a = TreeNode { val: 20, left: None, right: None };
+        let mut node_b = TreeNode { val: 30, left: None, right: None };
+        let mut node_c = TreeNode { val: 40, left: None, right: None };
+        let node_d = TreeNode { val: 50, left: None, right: None };
+        let node_e = TreeNode { val: 60, left: None, right: None };
+        let node_f = TreeNode { val: 70, left: None, right: None };
 
         //      a
         //    /   \
@@ -90,46 +67,14 @@ mod tests {
 
     #[test]
     fn test_breadth_first_values_01() {
-        let mut node_a = TreeNode {
-            val: 20,
-            left: None,
-            right: None,
-        };
-        let mut node_b = TreeNode {
-            val: 30,
-            left: None,
-            right: None,
-        };
-        let mut node_c = TreeNode {
-            val: 40,
-            left: None,
-            right: None,
-        };
-        let node_d = TreeNode {
-            val: 50,
-            left: None,
-            right: None,
-        };
-        let mut node_e = TreeNode {
-            val: 60,
-            left: None,
-            right: None,
-        };
-        let mut node_f = TreeNode {
-            val: 70,
-            left: None,
-            right: None,
-        };
-        let node_g = TreeNode {
-            val: 80,
-            left: None,
-            right: None,
-        };
-        let node_h = TreeNode {
-            val: 90,
-            left: None,
-            right: None,
-        };
+        let mut node_a = TreeNode { val: 20, left: None, right: None };
+        let mut node_b = TreeNode { val: 30, left: None, right: None };
+        let mut node_c = TreeNode { val: 40, left: None, right: None };
+        let node_d = TreeNode { val: 50, left: None, right: None };
+        let mut node_e = TreeNode { val: 60, left: None, right: None };
+        let mut node_f = TreeNode { val: 70, left: None, right: None };
+        let node_g = TreeNode { val: 80, left: None, right: None };
+        let node_h = TreeNode { val: 90, left: None, right: None };
         //      a
         //    /   \
         //   b     c
@@ -153,47 +98,19 @@ mod tests {
 
     #[test]
     fn test_breadth_first_values_02() {
-        let node_a = TreeNode {
-            val: 20,
-            left: None,
-            right: None,
-        };
+        let node_a = TreeNode { val: 20, left: None, right: None };
         assert_eq!(breadth_first_values(Rc::new(RefCell::new(node_a))), &[20]);
     }
 
     #[test]
     fn test_breadth_first_values_03() {
-        let mut node_a = TreeNode {
-            val: 20,
-            left: None,
-            right: None,
-        };
-        let mut node_b = TreeNode {
-            val: 30,
-            left: None,
-            right: None,
-        };
-        let mut node_c = TreeNode {
-            val: 40,
-            left: None,
-            right: None,
-        };
-        let mut node_d = TreeNode {
-            val: 50,
-            left: None,
-            right: None,
-        };
-        let node_e = TreeNode {
-            val: 60,
-            left: None,
-            right: None,
-        };
+        let mut node_a = TreeNode { val: 20, left: None, right: None };
+        let mut node_b = TreeNode { val: 30, left: None, right: None };
+        let mut node_c = TreeNode { val: 40, left: None, right: None };
+        let mut node_d = TreeNode { val: 50, left: None, right: None };
+        let node_e = TreeNode { val: 60, left: None, right: None };
 
-        let node_x = TreeNode {
-            val: 70,
-            left: None,
-            right: None,
-        };
+        let node_x = TreeNode { val: 70, left: None, right: None };
         //      a
         //       \
         //        b
