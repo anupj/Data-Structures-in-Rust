@@ -22,11 +22,11 @@ pub struct TreeNode {
 /// the tree and add the values in a running total
 pub fn tree_sum(root: TreeNodeRef) -> i32 {
     // println!("The root node is {:?}", root);
-    let mut result = 0i32;
+    let mut sum = 0i32;
     let mut stack = vec![root];
     while !stack.is_empty() {
         let current: Rc<RefCell<TreeNode>> = stack.pop().unwrap();
-        result += current.borrow().val;
+        sum += current.borrow().val;
 
         if let Some(right) = &current.borrow().right {
             stack.push(right.to_owned());
@@ -36,20 +36,28 @@ pub fn tree_sum(root: TreeNodeRef) -> i32 {
             stack.push(left.to_owned());
         };
     }
-    result
+    sum
 }
 
 /// Recursive approach
 /// WARNING: Here be 🐉
 pub fn tree_sum_recursive(root: Option<TreeNodeRef>) -> i32 {
-    match root {
-        None => return 0,
-        Some(root) => {
-            return root.borrow().val
-                + tree_sum_recursive(root.borrow().left.clone())
-                + tree_sum_recursive(root.borrow().right.clone())
-        }
+    if let Some(root) = root {
+        return root.borrow().val
+            + tree_sum_recursive(root.borrow().left.clone())
+            + tree_sum_recursive(root.borrow().right.clone());
     }
+    return 0;
+
+    // Here's how you'd do it with a `match` statement
+    // match root {
+    //     None => return 0,
+    //     Some(root) => {
+    //         return root.borrow().val
+    //             + tree_sum_recursive(root.borrow().left.clone())
+    //             + tree_sum_recursive(root.borrow().right.clone())
+    //     }
+    // }
 }
 
 #[cfg(test)]
