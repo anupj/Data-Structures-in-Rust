@@ -19,19 +19,29 @@ pub struct TreeNode {
 /// return the toal sum of all values in the tree.
 ///
 /// Approach: Use depth-first search to traverse
-/// the tree and add the values in a running total
+/// the tree and add the values to a running total
 pub fn tree_sum(root: TreeNodeRef) -> i32 {
     // println!("The root node is {:?}", root);
     let mut sum = 0i32;
+    // We'll use a `vec` as a
+    // stack LIFO data structure.
+    // Start by adding the root node
+    // to the stack.
     let mut stack = vec![root];
+
     while !stack.is_empty() {
+        // `current` points to top most
+        // item in the stack
         let current: Rc<RefCell<TreeNode>> = stack.pop().unwrap();
         sum += current.borrow().val;
 
+        // if there is a right node,
+        // then push it on top of the stack
         if let Some(right) = &current.borrow().right {
             stack.push(right.to_owned());
         };
-
+        // if there is a left node,
+        // then push it on top of the stack
         if let Some(left) = &current.borrow().left {
             stack.push(left.to_owned());
         };
