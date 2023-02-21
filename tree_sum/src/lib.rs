@@ -51,23 +51,19 @@ pub fn tree_sum(root: TreeNodeRef) -> i32 {
 
 /// Recursive approach
 /// WARNING: Here be 🐉
-pub fn tree_sum_recursive(root: Option<TreeNodeRef>) -> i32 {
+pub fn tree_sum_recursive(root: Option<&TreeNodeRef>) -> i32 {
+    // Check if `root` has `Some`thing
     if let Some(root) = root {
         return root.borrow().val
-            + tree_sum_recursive(root.borrow().left.clone())
-            + tree_sum_recursive(root.borrow().right.clone());
+            // recursively call left path
+            + tree_sum_recursive(root.borrow().left.as_ref())
+            // recursively call left path
+            + tree_sum_recursive(root.borrow().right.as_ref());
+    } else {
+        // root is None (i.e. empty or null)
+        // so return `0`
+        0
     }
-    return 0;
-
-    // Here's how you'd do it with a `match` statement
-    // match root {
-    //     None => return 0,
-    //     Some(root) => {
-    //         return root.borrow().val
-    //             + tree_sum_recursive(root.borrow().left.clone())
-    //             + tree_sum_recursive(root.borrow().right.clone())
-    //     }
-    // }
 }
 
 #[cfg(test)]
@@ -116,7 +112,7 @@ mod tests {
         node_a.left = Some(Rc::new(RefCell::new(node_b)));
         node_a.right = Some(Rc::new(RefCell::new(node_c)));
         assert_eq!(
-            tree_sum_recursive(Some(Rc::new(RefCell::new(node_a)))),
+            tree_sum_recursive(Some(&Rc::new(RefCell::new(node_a)))),
             21
         );
     }
@@ -175,7 +171,7 @@ mod tests {
         node_a.left = Some(Rc::new(RefCell::new(node_b)));
         node_a.right = Some(Rc::new(RefCell::new(node_c)));
         assert_eq!(
-            tree_sum_recursive(Some(Rc::new(RefCell::new(node_a)))),
+            tree_sum_recursive(Some(&Rc::new(RefCell::new(node_a)))),
             10
         );
     }
@@ -190,7 +186,7 @@ mod tests {
     fn test_tree_sum_recursive_02() {
         let node_a = TreeNode { val: 20, left: None, right: None };
         assert_eq!(
-            tree_sum_recursive(Some(Rc::new(RefCell::new(node_a)))),
+            tree_sum_recursive(Some(&Rc::new(RefCell::new(node_a)))),
             20
         );
     }
@@ -241,7 +237,7 @@ mod tests {
         node_b.left = Some(Rc::new(RefCell::new(node_c)));
         node_a.right = Some(Rc::new(RefCell::new(node_b)));
         assert_eq!(
-            tree_sum_recursive(Some(Rc::new(RefCell::new(node_a)))),
+            tree_sum_recursive(Some(&Rc::new(RefCell::new(node_a)))),
             200
         );
     }
