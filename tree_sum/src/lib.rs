@@ -57,7 +57,7 @@ pub fn tree_sum_recursive(root: Option<&TreeNodeRef>) -> i32 {
         return root.borrow().val
             // recursively call left path
             + tree_sum_recursive(root.borrow().left.as_ref())
-            // recursively call left path
+            // recursively call right path
             + tree_sum_recursive(root.borrow().right.as_ref());
     } else {
         // root is None (i.e. empty or null)
