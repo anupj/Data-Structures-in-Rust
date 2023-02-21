@@ -34,8 +34,8 @@ fn tree_path_finder_helper(
     if root.is_none() {
         return None;
     }
-    // Converts Option<T> to Option<&T>
-    let root = root.as_ref().unwrap();
+    // Get the value out of the `Option`
+    let root = root.unwrap();
 
     // Store the root value
     let root_val: i32 = root.borrow().val;
