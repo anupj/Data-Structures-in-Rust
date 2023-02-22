@@ -26,11 +26,12 @@ pub fn breadth_first_values(root: TreeNodeRef) -> Vec<i32> {
         let current: Rc<RefCell<TreeNode>> = queue.pop_front().unwrap();
         result.push(current.borrow().val);
 
+        // `Rc.clone()` is cheap
         if let Some(left) = &current.borrow().left {
-            queue.push_back(left.to_owned());
+            queue.push_back(left.clone());
         };
         if let Some(right) = &current.borrow().right {
-            queue.push_back(right.to_owned());
+            queue.push_back(right.clone());
         };
     }
     result

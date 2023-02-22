@@ -38,12 +38,14 @@ pub fn tree_sum(root: TreeNodeRef) -> i32 {
         // if there is a right node,
         // then push it on top of the stack
         if let Some(right) = &current.borrow().right {
-            stack.push(right.to_owned());
+            // `Rc.clone()` is cheap
+            stack.push(right.clone());
         };
         // if there is a left node,
         // then push it on top of the stack
         if let Some(left) = &current.borrow().left {
-            stack.push(left.to_owned());
+            // `Rc.clone()` is cheap
+            stack.push(left.clone());
         };
     }
     sum

@@ -25,12 +25,13 @@ pub fn depth_first_values(root: TreeNodeRef) -> Vec<i32> {
         let current: Rc<RefCell<TreeNode>> = stack.pop().unwrap();
         result.push(current.borrow().val);
 
+        // `Rc.clone()` is cheap
         if let Some(right) = &current.borrow().right {
-            stack.push(right.to_owned());
+            stack.push(right.clone());
         };
 
         if let Some(left) = &current.borrow().left {
-            stack.push(left.to_owned());
+            stack.push(left.clone());
         };
     }
     result

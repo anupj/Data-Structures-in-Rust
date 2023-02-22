@@ -29,10 +29,10 @@ pub fn tree_includes(root: TreeNodeRef, target: i32) -> bool {
         }
 
         if let Some(left) = &current.borrow().left {
-            queue.push_back(left.to_owned());
+            queue.push_back(left.clone());
         };
         if let Some(right) = &current.borrow().right {
-            queue.push_back(right.to_owned());
+            queue.push_back(right.clone());
         };
     }
     return false;
