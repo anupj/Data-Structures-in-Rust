@@ -20,6 +20,8 @@ pub struct TreeNode {
 ///
 /// Approach: Use depth-first search to traverse
 /// the tree and add the values to a running total
+/// Time: O(n)
+/// Space: O(n)
 pub fn tree_sum(root: TreeNodeRef) -> i32 {
     // println!("The root node is {:?}", root);
     let mut sum = 0i32;
@@ -53,14 +55,16 @@ pub fn tree_sum(root: TreeNodeRef) -> i32 {
 
 /// Recursive approach
 /// WARNING: Here be 🐉
+/// Time: O(n)
+/// Space: O(n)
 pub fn tree_sum_recursive(root: Option<&TreeNodeRef>) -> i32 {
     // Check if `root` has `Some`thing
     if let Some(root) = root {
-        return root.borrow().val
+        root.borrow().val
             // recursively call left path
             + tree_sum_recursive(root.borrow().left.as_ref())
             // recursively call right path
-            + tree_sum_recursive(root.borrow().right.as_ref());
+            + tree_sum_recursive(root.borrow().right.as_ref())
     } else {
         // root is None (i.e. empty or null)
         // so return `0`
