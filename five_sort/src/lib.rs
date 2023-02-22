@@ -8,6 +8,8 @@
 /// Elements that are not 5 can appear in
 /// any order in the output, as long as
 /// all 5s are at the end of the array.
+/// Time: O(n)
+/// Space: O(1)
 pub fn five_sort(nums: &mut [u32]) -> &[u32] {
     // i is the pointer that traverses
     // the slice from the left

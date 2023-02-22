@@ -19,6 +19,11 @@ pub struct TreeNode {
 /// This function takes in the root of a binary tree.
 /// It should return a number representing the
 /// height of the tree.
+/// The height of a binary tree is defined as the
+/// maximal number of edges from the root node to any leaf node.
+///
+/// Time: O(n)
+/// Space: O(n)
 pub fn tree_height(root: Option<&TreeNodeRef>) -> i32 {
     if let Some(root) = root {
         let left_height = tree_height(root.borrow().left.as_ref());
