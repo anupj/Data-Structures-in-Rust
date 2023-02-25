@@ -21,6 +21,7 @@ pub struct TreeNode {
 /// height of the tree.
 /// The height of a binary tree is defined as the
 /// maximal number of edges from the root node to any leaf node.
+/// If the tree is empty, return -1.
 ///
 /// Time: O(n)
 /// Space: O(n)
@@ -30,7 +31,8 @@ pub fn tree_height(root: Option<&TreeNodeRef>) -> i32 {
         let right_height = tree_height(root.borrow().right.as_ref());
         return 1 + cmp::max(left_height, right_height);
     }
-    -1
+    const EMPTY_TREE: i32 = -1;
+    EMPTY_TREE
 }
 
 #[cfg(test)]
