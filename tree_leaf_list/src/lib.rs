@@ -39,7 +39,6 @@ pub fn tree_leaf_list(root: TreeNodeRef) -> Vec<i32> {
     leaves
 }
 
-// TODO recurisve logic
 /// Recursive approach
 /// WARNING: Here be 🐉
 /// Time: O(n)
@@ -49,6 +48,8 @@ pub fn leaf_list_recursive(root: TreeNodeRef) -> Vec<i32> {
     fill_leaves(Some(&root), &mut leaves);
     leaves
 }
+
+// This is where all the recursive fun happens
 pub fn fill_leaves(root: Option<&TreeNodeRef>, leaves: &mut Vec<i32>) {
     // Check if `root` has `Some`thing
     if let Some(root) = root {
