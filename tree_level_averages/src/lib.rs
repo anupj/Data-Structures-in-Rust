@@ -82,16 +82,15 @@ pub fn tree_level_averages(root: Option<TreeNodeRef>) -> Vec<i32> {
     let mut result: Vec<i32> = Vec::new();
 
     for level in levels {
-        result.push(avg(level));
+        result.push(average(level));
     }
 
     result
 }
 
-fn avg(list_of_nums: Vec<i32>) -> i32 {
+fn average(list_of_nums: Vec<i32>) -> i32 {
     let sum: i32 = list_of_nums.iter().sum();
-    let average = sum / list_of_nums.len() as i32;
-    average
+    sum / list_of_nums.len() as i32
 }
 
 #[cfg(test)]
