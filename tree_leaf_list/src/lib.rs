@@ -18,13 +18,13 @@ pub struct TreeNode {
 /// returns an array containing all values
 /// of all leaf nodes in left-to-right order.
 pub fn tree_leaf_list(root: TreeNodeRef) -> Vec<i32> {
-    let mut result = Vec::new();
+    let mut leaves = Vec::new();
     let mut stack = vec![root];
     while !stack.is_empty() {
         let current: Rc<RefCell<TreeNode>> = stack.pop().unwrap();
         if current.borrow().left.is_none() && current.borrow().right.is_none()
         {
-            result.push(current.borrow().val);
+            leaves.push(current.borrow().val);
         }
 
         // `Rc.clone()` is cheap
@@ -36,7 +36,29 @@ pub fn tree_leaf_list(root: TreeNodeRef) -> Vec<i32> {
             stack.push(left.clone());
         };
     }
-    result
+    leaves
+}
+
+// TODO recurisve logic
+/// Recursive approach
+/// WARNING: Here be 🐉
+/// Time: O(n)
+/// Space: O(n)
+pub fn leaf_list_recursive(root: TreeNodeRef) -> Vec<i32> {
+    let mut leaves = Vec::new();
+    fill_leaves(Some(&root), &mut leaves);
+    leaves
+}
+pub fn fill_leaves(root: Option<&TreeNodeRef>, leaves: &mut Vec<i32>) {
+    // Check if `root` has `Some`thing
+    if let Some(root) = root {
+        if root.borrow().left.is_none() && root.borrow().right.is_none() {
+            leaves.push(root.borrow().val);
+        }
+
+        fill_leaves(root.borrow().left.as_ref(), leaves);
+        fill_leaves(root.borrow().right.as_ref(), leaves);
+    }
 }
 
 #[cfg(test)]
@@ -69,6 +91,31 @@ mod tests {
     }
 
     #[test]
+    fn test_tree_leaf_list_recursive_00() {
+        let mut node_a = TreeNode { val: 20, left: None, right: None };
+        let mut node_b = TreeNode { val: 30, left: None, right: None };
+        let mut node_c = TreeNode { val: 40, left: None, right: None };
+        let node_d = TreeNode { val: 50, left: None, right: None };
+        let node_e = TreeNode { val: 60, left: None, right: None };
+        let node_f = TreeNode { val: 70, left: None, right: None };
+
+        //      a
+        //    /   \
+        //   b     c
+        //  / \     \
+        // d   e     f
+        node_b.left = Some(Rc::new(RefCell::new(node_d)));
+        node_b.right = Some(Rc::new(RefCell::new(node_e)));
+        node_c.right = Some(Rc::new(RefCell::new(node_f)));
+        node_a.left = Some(Rc::new(RefCell::new(node_b)));
+        node_a.right = Some(Rc::new(RefCell::new(node_c)));
+        assert_eq!(
+            leaf_list_recursive(Rc::new(RefCell::new(node_a))),
+            &[50, 60, 70]
+        );
+    }
+
+    #[test]
     fn test_tree_leaf_list_01() {
         let mut node_a = TreeNode { val: 20, left: None, right: None };
         let mut node_b = TreeNode { val: 30, left: None, right: None };
@@ -96,11 +143,45 @@ mod tests {
             &[50, 80, 70]
         );
     }
+    #[test]
+    fn test_tree_leaf_list_recursive_01() {
+        let mut node_a = TreeNode { val: 20, left: None, right: None };
+        let mut node_b = TreeNode { val: 30, left: None, right: None };
+        let mut node_c = TreeNode { val: 40, left: None, right: None };
+        let node_d = TreeNode { val: 50, left: None, right: None };
+        let mut node_e = TreeNode { val: 60, left: None, right: None };
+        let node_f = TreeNode { val: 70, left: None, right: None };
+        let node_g = TreeNode { val: 80, left: None, right: None };
+
+        //      a
+        //    /   \
+        //   b     c
+        //  / \     \
+        // d   e     f
+        //    /
+        //   g
+        node_b.left = Some(Rc::new(RefCell::new(node_d)));
+        node_e.left = Some(Rc::new(RefCell::new(node_g)));
+        node_b.right = Some(Rc::new(RefCell::new(node_e)));
+        node_c.right = Some(Rc::new(RefCell::new(node_f)));
+        node_a.left = Some(Rc::new(RefCell::new(node_b)));
+        node_a.right = Some(Rc::new(RefCell::new(node_c)));
+        assert_eq!(
+            leaf_list_recursive(Rc::new(RefCell::new(node_a))),
+            &[50, 80, 70]
+        );
+    }
 
     #[test]
     fn test_tree_leaf_list_02() {
         let node_a = TreeNode { val: 20, left: None, right: None };
         assert_eq!(tree_leaf_list(Rc::new(RefCell::new(node_a))), &[20]);
+    }
+
+    #[test]
+    fn test_tree_leaf_list_recursive_02() {
+        let node_a = TreeNode { val: 20, left: None, right: None };
+        assert_eq!(leaf_list_recursive(Rc::new(RefCell::new(node_a))), &[20]);
     }
 
     #[test]
@@ -125,5 +206,28 @@ mod tests {
         node_b.left = Some(Rc::new(RefCell::new(node_c)));
         node_a.right = Some(Rc::new(RefCell::new(node_b)));
         assert_eq!(tree_leaf_list(Rc::new(RefCell::new(node_a))), &[60]);
+    }
+    #[test]
+    fn test_tree_leaf_list_recursive_03() {
+        let mut node_a = TreeNode { val: 20, left: None, right: None };
+        let mut node_b = TreeNode { val: 30, left: None, right: None };
+        let mut node_c = TreeNode { val: 40, left: None, right: None };
+        let mut node_d = TreeNode { val: 50, left: None, right: None };
+        let node_e = TreeNode { val: 60, left: None, right: None };
+
+        //      a
+        //       \
+        //        b
+        //       /
+        //      c
+        //       \
+        //        d
+        //         \
+        //          e
+        node_d.right = Some(Rc::new(RefCell::new(node_e)));
+        node_c.right = Some(Rc::new(RefCell::new(node_d)));
+        node_b.left = Some(Rc::new(RefCell::new(node_c)));
+        node_a.right = Some(Rc::new(RefCell::new(node_b)));
+        assert_eq!(leaf_list_recursive(Rc::new(RefCell::new(node_a))), &[60]);
     }
 }
