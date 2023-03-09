@@ -19,12 +19,12 @@ impl Graph {
         self.adjacency_list.entry(node_id).or_insert(Vec::new());
     }
 
-    // Use this method to add directed edge
+    // Use this method to add directed edge u --> v
     fn add_directed_edge(&mut self, u: NodeId, v: NodeId) {
         self.adjacency_list.entry(u).or_insert(Vec::new()).push(v);
     }
 
-    // Use this method to add directed edge
+    // add a bi-directional edge u <--> v
     fn add_undirected_edge(&mut self, u: NodeId, v: NodeId) {
         self.adjacency_list.entry(u).or_insert(Vec::new()).push(v);
         self.adjacency_list.entry(v).or_insert(Vec::new()).push(u);
@@ -98,6 +98,13 @@ mod tests {
         graph.add_directed_edge(0, 2);
         graph.add_directed_edge(1, 2);
         graph.add_directed_edge(2, 3);
+        // 0 ---> 1
+        // |      |
+        // v      |
+        // 2 <----
+        // |
+        // v
+        // 3
         let traversal = depth_first_search(graph.clone(), 0);
         assert_eq!(traversal, vec![0, 1, 2, 3]);
         let traversal = depth_first_search(graph, 3);
