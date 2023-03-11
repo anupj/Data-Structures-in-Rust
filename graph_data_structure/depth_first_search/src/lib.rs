@@ -47,13 +47,9 @@ fn dfs_helper(
 ) {
     visited.insert(current_node);
     traversel.push(current_node);
-    // println!(
-    //     "visited is: {:?}, and traversel is {:?}, and the current node is {}",
-    //     visited, traversel, current_node
-    // );
     for neighbour in graph.adjacency_list.get(&current_node).unwrap() {
         if !visited.contains(neighbour) {
-            dfs_helper(&graph, *neighbour, visited, traversel);
+            dfs_helper(graph, *neighbour, visited, traversel);
         }
     }
 }

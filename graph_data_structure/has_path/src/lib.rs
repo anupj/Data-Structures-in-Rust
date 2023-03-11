@@ -12,9 +12,7 @@ pub struct Graph {
 
 impl Graph {
     fn new() -> Self {
-        Self {
-            adjacency_list: HashMap::new(),
-        }
+        Self { adjacency_list: HashMap::new() }
     }
 
     fn add_node(&mut self, node_id: NodeId) {
@@ -33,31 +31,34 @@ impl Graph {
     }
 }
 
+/// takes in an object representing the adjacency list of a directed acyclic
+/// graph and two nodes (src, dst). The function should return a boolean
+/// indicating whether or not there exists a directed path between the source
+/// and destination nodes.
 /// Depth-first search algorithm
-fn has_path(graph: Graph, start_node: NodeId) -> Vec<NodeId> {
+fn has_path(graph: Graph, start_node: NodeId, dest_node: NodeId) -> bool {
     let mut visited = HashSet::new();
-    let mut traversel = Vec::new();
-    has_path_helper(&graph, start_node, &mut visited, &mut traversel);
-    traversel
+    has_path_helper(&graph, start_node, dest_node, &mut visited)
 }
 
 fn has_path_helper(
     graph: &Graph,
     current_node: NodeId,
+    dest_node: NodeId,
     visited: &mut HashSet<NodeId>,
-    traversel: &mut Vec<NodeId>,
-) {
+) -> bool {
+    if current_node == dest_node {
+        return true;
+    }
     visited.insert(current_node);
-    traversel.push(current_node);
-    // println!(
-    //     "visited is: {:?}, and traversel is {:?}, and the current node is {}",
-    //     visited, traversel, current_node
-    // );
     for neighbour in graph.adjacency_list.get(&current_node).unwrap() {
-        if !visited.contains(neighbour) {
-            has_path_helper(&graph, *neighbour, visited, traversel);
+        if !visited.contains(neighbour)
+            && has_path_helper(graph, *neighbour, dest_node, visited)
+        {
+            return true;
         }
     }
+    false
 }
 
 #[cfg(test)]
@@ -111,10 +112,10 @@ mod tests {
         // |
         // v
         // 3
-        let traversal = has_path(graph.clone(), 0);
-        assert_eq!(traversal, vec![0, 1, 2, 3]);
-        let traversal = has_path(graph, 3);
-        assert_eq!(traversal, vec![3]);
+        let result = has_path(graph.clone(), 0, 3);
+        assert_eq!(result, true);
+        let result = has_path(graph, 3, 1);
+        assert_eq!(result, false);
     }
 
     #[test]
@@ -138,9 +139,13 @@ mod tests {
         // |      |
         // v      v
         // 4      5
-        let traversal = has_path(graph.clone(), 0);
-        assert_eq!(traversal, vec![0, 1, 3, 5, 2, 4]);
-        let traversal = has_path(graph, 3);
-        assert_eq!(traversal, vec![3, 5]);
+        let result = has_path(graph.clone(), 0, 5);
+        assert_eq!(result, true);
+        let result = has_path(graph.clone(), 0, 4);
+        assert_eq!(result, true);
+        let result = has_path(graph.clone(), 2, 5);
+        assert_eq!(result, false);
+        let result = has_path(graph, 3, 1);
+        assert_eq!(result, false);
     }
 }
