@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
+    collections::{HashMap, VecDeque},
     usize,
 };
 
@@ -31,7 +31,9 @@ impl Graph {
     }
 }
 
-/// Depth-first search algorithm
+/// Breadth-first search algorithm
+/// We cannot implement this recursively
+/// so iterative approach it is
 fn breadth_first_search(graph: Graph, start_node: NodeId) -> Vec<NodeId> {
     let mut visited = HashMap::new();
     let mut traversel = Vec::new();
@@ -85,7 +87,7 @@ mod tests {
     }
 
     #[test]
-    fn test_dfs() {
+    fn test_dfs_00() {
         let mut graph = Graph::new();
         graph.add_node(0);
         graph.add_node(1);
@@ -106,5 +108,32 @@ mod tests {
         assert_eq!(traversal, vec![0, 1, 2, 3]);
         let traversal = breadth_first_search(graph, 3);
         assert_eq!(traversal, vec![3]);
+    }
+
+    #[test]
+    fn test_dfs_01() {
+        let mut graph = Graph::new();
+        graph.add_node(0);
+        graph.add_node(1);
+        graph.add_node(2);
+        graph.add_node(3);
+        graph.add_node(4);
+        graph.add_node(5);
+        graph.add_directed_edge(0, 1);
+        graph.add_directed_edge(0, 2);
+        graph.add_directed_edge(1, 3);
+        graph.add_directed_edge(2, 4);
+        graph.add_directed_edge(3, 5);
+        // 0 ---> 1
+        // |      |
+        // v      v
+        // 2      3
+        // |      |
+        // v      v
+        // 4      5
+        let traversal = breadth_first_search(graph.clone(), 0);
+        assert_eq!(traversal, vec![0, 1, 2, 3, 4, 5]);
+        let traversal = breadth_first_search(graph, 3);
+        assert_eq!(traversal, vec![3, 5]);
     }
 }
