@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::{HashMap, HashSet, VecDeque},
     usize,
 };
 
@@ -35,17 +35,17 @@ impl Graph {
 /// We cannot implement this recursively
 /// so iterative approach it is
 fn breadth_first_search(graph: Graph, start_node: NodeId) -> Vec<NodeId> {
-    let mut visited = HashMap::new();
+    let mut visited = HashSet::new();
     let mut traversel = Vec::new();
     let mut queue = VecDeque::new();
-    visited.insert(start_node, true);
+    visited.insert(start_node);
     queue.push_back(start_node);
     while !queue.is_empty() {
         let current_node = queue.pop_front().unwrap();
         traversel.push(current_node);
         for neighbour in graph.adjacency_list.get(&current_node).unwrap() {
-            if !visited.contains_key(neighbour) {
-                visited.insert(*neighbour, true);
+            if !visited.contains(neighbour) {
+                visited.insert(*neighbour);
                 queue.push_back(*neighbour);
             }
         }
