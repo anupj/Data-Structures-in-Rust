@@ -1,5 +1,9 @@
 use std::collections::HashSet;
 
+/// This function takes in a grid containing Ws and Ls. W
+/// represents water and L represents land. The function should
+/// return the number of islands on the grid. An island is a
+/// vertically or horizontally connected region of land.
 pub fn island_count<const N: usize>(grid: &[[char; N]]) -> usize {
     let mut visited: HashSet<String> = HashSet::new();
     let mut count = 0;
@@ -16,25 +20,37 @@ pub fn island_count<const N: usize>(grid: &[[char; N]]) -> usize {
     count
 }
 
+/// This function is called recursively to
+/// track the land
 pub fn explore<const N: usize>(
     grid: &[[char; N]],
     row_num: isize,
     col_num: isize,
     visited: &mut HashSet<String>,
 ) -> bool {
+    // This check is required because you
+    // could call this function recursively with
+    // -1 or grid.len() value for row or column.
     let row_in_bounds = { row_num >= 0 && row_num < grid.len() as isize };
     let col_in_bounds = { col_num >= 0 && col_num < grid[0].len() as isize };
 
+    // if the row or col num value is
+    // out of bounds return false
     if !row_in_bounds || !col_in_bounds {
         return false;
     }
 
+    // We only want to proceed to true if
+    // the grid cell is `L`
     if grid[row_num as usize][col_num as usize] == 'W' {
         return false;
     }
 
+    // Track the visited grid cell location as `row,col`
     let pos = format!("{},{}", row_num, col_num);
     if visited.contains(&pos) {
+        // we have already visited this location
+        // so return
         return false;
     }
     visited.insert(pos);
