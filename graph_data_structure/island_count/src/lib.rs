@@ -60,6 +60,9 @@ pub fn explore<const N: usize>(
     explore(grid, row_num, col_num - 1, visited);
     explore(grid, row_num, col_num + 1, visited);
 
+    // If I've reached here then
+    // I am `L`
+    // and I have explored my neighbours
     true
 }
 
