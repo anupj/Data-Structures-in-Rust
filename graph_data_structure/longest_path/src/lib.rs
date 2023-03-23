@@ -27,7 +27,7 @@ impl Graph {
         self.adjacency_list.entry(v).or_insert(Vec::new()).push(u);
     }
 }
-/// Takes in an adjacency list for a directed acyclic graph. The
+/// This `fn` takes in an a directed acyclic graph. The
 /// function should return the length of the longest path
 /// within the graph. A path may start and end at any two
 /// nodes. The length of a path is considered the number of
@@ -56,7 +56,9 @@ fn longest_path(graph: Graph) -> u32 {
         traverse_distance(&graph, *node, &mut distance);
     }
 
-    // traverse_distance(&graph, start_node, &mut distance, &mut traversel);
+    // return the max value from the list
+    // of values in distance since we want
+    // the longest path
     *distance.values().max().unwrap_or(&0)
 }
 
@@ -69,18 +71,33 @@ fn traverse_distance(
     // If node is found the `distance`
     // map, then return its distance from a
     // terminal node.
+    // It also acts as guard against visiting
+    // nodes that have already been visited.
     if distance.contains_key(&current_node) {
         return *distance.get(&current_node).unwrap();
     }
 
     let mut max_distance = 0;
     for neighbour in graph.adjacency_list.get(&current_node).unwrap() {
+        // lets call the function recursively for each neighbour
+        // of this `current_node`
         let attempt = traverse_distance(graph, *neighbour, distance);
         if attempt > max_distance {
             max_distance = attempt;
         }
     }
+
+    // Set the distance of the current node by
+    // adding a 1 to max distance i.e. It is
+    // an additional edge away from the current
+    // distance to the terminal node
     distance.insert(current_node, 1 + max_distance);
+
+    // return the new distance
+    // This and above line could have been
+    // written in one line as follows:
+    // `distance.insert(current_node, 1 + max_distance).unwrap()`
+    // I split it in two lines for clarity
     *distance.get(&current_node).unwrap()
 }
 
