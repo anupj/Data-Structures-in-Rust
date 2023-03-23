@@ -9,9 +9,7 @@ pub struct Graph {
 
 impl Graph {
     fn new() -> Self {
-        Self {
-            adjacency_list: HashMap::new(),
-        }
+        Self { adjacency_list: HashMap::new() }
     }
 
     fn add_node(&mut self, node_id: NodeId) {
