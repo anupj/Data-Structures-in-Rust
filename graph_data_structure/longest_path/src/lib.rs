@@ -81,9 +81,10 @@ fn traverse_distance(
     for neighbour in graph.adjacency_list.get(&current_node).unwrap() {
         // lets call the function recursively for each neighbour
         // of this `current_node`
-        let attempt = traverse_distance(graph, *neighbour, distance);
-        if attempt > max_distance {
-            max_distance = attempt;
+        let neighbour_distance =
+            traverse_distance(graph, *neighbour, distance);
+        if neighbour_distance > max_distance {
+            max_distance = neighbour_distance;
         }
     }
 
