@@ -28,10 +28,18 @@ pub fn minimum_length_bridge<const N: usize>(grid: &[[char; N]]) -> isize {
 
     let mut queue = VecDeque::new();
     for pos in &visited {
+        // `pos` is "row_num,col_num"
+        // split the string and `map`
+        // to usize
         let split_values: Vec<_> = pos
             .split(',')
             .map(|s| s.trim().parse::<usize>().unwrap())
             .collect();
+
+        // `queue` stores a tuple (row_num, col_num, distance)
+        // `distance` is distance from the Land under
+        // consideration so it starts with zero for
+        // grid cells representing this Land.
         queue.push_back((
             split_values[0] as isize,
             split_values[1] as isize,
@@ -47,6 +55,8 @@ pub fn minimum_length_bridge<const N: usize>(grid: &[[char; N]]) -> isize {
         {
             return distance - 1;
         }
+
+        // Good technique to traverse the neighbours of a cell
         let deltas = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
         for delta in deltas {
