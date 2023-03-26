@@ -33,10 +33,16 @@ impl Graph {
     }
 }
 
+/// This function takes in an object representing
+/// the adjacency list of a directed graph. The
+/// function should return a boolean indicating whether
+/// or not the graph contains a cycle.
+///
 /// white-grey-black cycle detection algorithm
 fn has_cycle(graph: Graph) -> bool {
-    let mut visiting = HashSet::new();
-    let mut visited = HashSet::new();
+    // white means not visited yet (default)
+    let mut visiting = HashSet::new(); // grey
+    let mut visited = HashSet::new(); // black
 
     for start_node in &graph.adjacency_list {
         if detect_cycle(&graph, *start_node.0, &mut visiting, &mut visited) {
@@ -52,10 +58,17 @@ fn detect_cycle(
     visiting: &mut HashSet<NodeId>,
     visited: &mut HashSet<NodeId>,
 ) -> bool {
+    // I've visited this node before
+    // so no need to go through it again
+    // thus breaking the recursion
     if visited.contains(&current_node) {
         return false;
     };
 
+    // If I find this node in `visiting` means
+    // I've traversed this node before and
+    // therefore I've come back to this node
+    // hence a cycle
     if visiting.contains(&current_node) {
         return true;
     }
@@ -68,6 +81,9 @@ fn detect_cycle(
         }
     }
 
+    // We have processed `current_node`
+    // so we are no longer `visiting` it
+    // but it is now `visited`
     visiting.remove(&current_node);
     visited.insert(current_node);
 
