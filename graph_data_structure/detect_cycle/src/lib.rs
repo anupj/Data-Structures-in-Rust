@@ -31,19 +31,18 @@ fn detect_cycle(
     visited: &mut HashSet<u32>,
     visiting: &mut HashSet<u32>,
 ) -> bool {
-    visited.insert(*node);
+    if visiting.contains(node) {
+        return true;
+    }
+
     visiting.insert(*node);
 
     for neighbor in graph.get(node).unwrap() {
-        if !visited.contains(neighbor)
-            && detect_cycle(neighbor, graph, visited, visiting)
-        {
-            return true;
-        } else if visiting.contains(neighbor) {
+        if detect_cycle(neighbor, graph, visited, visiting) {
             return true;
         }
     }
-
+    visited.insert(*node);
     visiting.remove(node);
     false
 }

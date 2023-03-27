@@ -60,9 +60,9 @@ fn build_graph(num_courses: usize, prereqs: &[[usize; 2]]) -> Graph {
     }
 
     for prereq in prereqs {
-        let a = prereq[0];
-        let b = prereq[1];
-        graph.add_directed_edge(a, b);
+        let course_a = prereq[0];
+        let course_b = prereq[1];
+        graph.add_directed_edge(course_a, course_b);
     }
 
     graph
