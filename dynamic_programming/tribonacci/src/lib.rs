@@ -32,6 +32,40 @@ pub fn tribonacci(n: usize, memo: &mut HashMap<usize, usize>) -> usize {
     memo[&n]
 }
 
+/// Here's a more "idiomatic" way of writing
+/// the same function.
+/// I'll use `cache` instead of `memo`
+pub fn trib(n: usize, cache: &mut Vec<Option<usize>>) -> usize {
+    // If the cache already contains the value
+    // return it
+    if let Some(value) = cache[n] {
+        value
+    } else {
+        // Otherwise, compute the value recursively,
+        // and store it in the cache
+        let result = if n < 2 {
+            // Base case: trib(0) and trib(1)
+            0
+        } else if n == 2 {
+            // Base case: trib(2)
+            1
+        } else {
+            // recursive case: trib(n) = trib(n-1) + trib(n-2) + trib(n-3)
+            trib(n - 1, cache) + trib(n - 2, cache) + trib(n - 3, cache)
+        };
+        cache[n] = Some(result);
+        result
+    }
+}
+
+// A helper function that creates a cache and calls fib
+fn trib_with_cache(n: usize) -> usize {
+    // Create a vector of n+1 None values
+    let mut cache = vec![None; n + 2];
+    // Call fib with the cache
+    trib(n, &mut cache)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -40,11 +74,17 @@ mod tests {
     fn fibonacci_00() {
         let result = tribonacci(0, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 0);
+
+        let result = trib_with_cache(0);
+        assert_eq!(result, 0);
     }
 
     #[test]
     fn fibonacci_01() {
         let result = tribonacci(1, &mut HashMap::<usize, usize>::new());
+        assert_eq!(result, 0);
+
+        let result = trib_with_cache(1);
         assert_eq!(result, 0);
     }
 
@@ -52,11 +92,17 @@ mod tests {
     fn fibonacci_02() {
         let result = tribonacci(2, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 1);
+
+        let result = trib_with_cache(2);
+        assert_eq!(result, 1);
     }
 
     #[test]
     fn fibonacci_03() {
         let result = tribonacci(5, &mut HashMap::<usize, usize>::new());
+        assert_eq!(result, 4);
+
+        let result = trib_with_cache(5);
         assert_eq!(result, 4);
     }
 
@@ -64,11 +110,17 @@ mod tests {
     fn fibonacci_04() {
         let result = tribonacci(7, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 13);
+
+        let result = trib_with_cache(7);
+        assert_eq!(result, 13);
     }
 
     #[test]
     fn fibonacci_05() {
         let result = tribonacci(14, &mut HashMap::<usize, usize>::new());
+        assert_eq!(result, 927);
+
+        let result = trib_with_cache(14);
         assert_eq!(result, 927);
     }
 
@@ -76,17 +128,26 @@ mod tests {
     fn fibonacci_06() {
         let result = tribonacci(20, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 35890);
+
+        let result = trib_with_cache(20);
+        assert_eq!(result, 35890);
     }
 
     #[test]
     fn fibonacci_07() {
         let result = tribonacci(37, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 1132436852);
+
+        let result = trib_with_cache(37);
+        assert_eq!(result, 1132436852);
     }
 
     #[test]
     fn fibonacci_08() {
         let result = tribonacci(10, &mut HashMap::<usize, usize>::new());
+        assert_eq!(result, 81);
+
+        let result = trib_with_cache(10);
         assert_eq!(result, 81);
     }
 }
