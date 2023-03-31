@@ -8,7 +8,7 @@ use std::collections::HashMap;
 /// many times as necessary.
 ///
 /// You may assume that the target amount is non-negative.
-pub fn sum_possible<const N: usize>(
+pub fn sum_possible_with_cache<const N: usize>(
     amount: isize,
     numbers: [isize; N],
     cache: &mut HashMap<isize, bool>,
@@ -31,7 +31,7 @@ pub fn sum_possible<const N: usize>(
     }
 
     for num in numbers {
-        if sum_possible(amount - num, numbers, cache) {
+        if sum_possible_with_cache(amount - num, numbers, cache) {
             cache.insert(amount - num, true);
             return true;
         }
@@ -45,9 +45,9 @@ pub fn sum_possible<const N: usize>(
     false
 }
 
-pub fn sum_possible_with_cache<const N: usize>(amount: isize, numbers: [isize; N]) -> bool {
+pub fn sum_possible<const N: usize>(amount: isize, numbers: [isize; N]) -> bool {
     let mut cache = HashMap::new();
-    sum_possible(amount, numbers, &mut cache)
+    sum_possible_with_cache(amount, numbers, &mut cache)
 }
 
 #[cfg(test)]
@@ -56,61 +56,61 @@ mod tests {
 
     #[test]
     fn sum_possible_00() {
-        let result = sum_possible_with_cache::<3>(8, [5, 12, 4]);
+        let result = sum_possible::<3>(8, [5, 12, 4]);
         assert_eq!(result, true);
     }
 
     #[test]
     fn sum_possible_01() {
-        let result = sum_possible_with_cache::<4>(15, [6, 2, 10, 19]);
+        let result = sum_possible::<4>(15, [6, 2, 10, 19]);
         assert_eq!(result, false);
     }
 
     #[test]
     fn sum_possible_02() {
-        let result = sum_possible_with_cache::<3>(13, [6, 2, 1]);
+        let result = sum_possible::<3>(13, [6, 2, 1]);
         assert_eq!(result, true);
     }
 
     #[test]
     fn sum_possible_03() {
-        let result = sum_possible_with_cache::<3>(103, [6, 20, 1]);
+        let result = sum_possible::<3>(103, [6, 20, 1]);
         assert_eq!(result, true);
     }
 
     #[test]
     fn sum_possible_04() {
-        let result = sum_possible_with_cache::<0>(12, []);
+        let result = sum_possible::<0>(12, []);
         assert_eq!(result, false);
     }
 
     #[test]
     fn sum_possible_05() {
-        let result = sum_possible_with_cache::<1>(12, [12]);
+        let result = sum_possible::<1>(12, [12]);
         assert_eq!(result, true);
     }
 
     #[test]
     fn sum_possible_06() {
-        let result = sum_possible_with_cache::<0>(0, []);
+        let result = sum_possible::<0>(0, []);
         assert_eq!(result, true);
     }
 
     #[test]
     fn sum_possible_07() {
-        let result = sum_possible_with_cache::<4>(271, [10, 8, 265, 24]);
+        let result = sum_possible::<4>(271, [10, 8, 265, 24]);
         assert_eq!(result, false);
     }
 
     #[test]
     fn sum_possible_08() {
-        let result = sum_possible_with_cache::<3>(2017, [4, 2, 10]);
+        let result = sum_possible::<3>(2017, [4, 2, 10]);
         assert_eq!(result, false);
     }
 
     #[test]
     fn sum_possible_09() {
-        let result = sum_possible_with_cache::<2>(13, [3, 5]);
+        let result = sum_possible::<2>(13, [3, 5]);
         assert_eq!(result, true);
     }
 }
