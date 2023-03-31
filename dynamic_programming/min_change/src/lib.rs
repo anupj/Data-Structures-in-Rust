@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 /// Takes in an amount and an array of coins.
 /// The function should return the minimum number
 /// of coins required to create the amount. You
