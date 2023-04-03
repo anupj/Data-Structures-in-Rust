@@ -16,25 +16,25 @@ pub fn non_adjacent_sum<const N: usize>(nums: [usize; N]) -> usize {
 
 pub fn non_adjacent_sum_with_cache<const N: usize>(
     nums: [usize; N],
-    i: usize,
+    idx: usize,
     cache: &mut HashMap<usize, usize>,
 ) -> usize {
     // If the calculated value is in cache
     // then return it
-    if let Some(&value) = cache.get(&i) {
+    if let Some(&value) = cache.get(&idx) {
         return value;
     }
 
-    if i >= nums.len() {
+    if idx >= nums.len() {
         return 0;
     }
 
-    let include = nums[i] + non_adjacent_sum_with_cache(nums, i + 2, cache);
-    let exclude = non_adjacent_sum_with_cache(nums, i + 1, cache);
+    let include = nums[idx] + non_adjacent_sum_with_cache(nums, idx + 2, cache);
+    let exclude = non_adjacent_sum_with_cache(nums, idx + 1, cache);
 
     let result = include.max(exclude);
 
-    cache.insert(i, result);
+    cache.insert(idx, result);
 
     result
 }
