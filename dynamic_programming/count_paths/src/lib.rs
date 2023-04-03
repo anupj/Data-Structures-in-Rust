@@ -37,9 +37,10 @@ pub fn count_paths_with_cache<const N: usize>(
     let down_path = count_paths_with_cache(grid, row_num + 1, col_num, cache);
     let right_path = count_paths_with_cache(grid, row_num, col_num + 1, cache);
 
-    cache.insert(pos.clone(), down_path + right_path);
+    let result = down_path + right_path;
+    cache.insert(pos, result);
 
-    *cache.get(&pos).unwrap()
+    result
 }
 
 #[cfg(test)]
