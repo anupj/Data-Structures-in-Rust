@@ -1,4 +1,3 @@
-
 # Data structures in Rust
 
 Rust implementation of challenges and problems covered in
