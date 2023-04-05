@@ -11,17 +11,17 @@ use std::collections::HashMap;
 /// The maximum non-adjacent sum is 16, because 4 + 12.
 /// 4 and 12 are not adjacent in the array.
 pub fn non_adjacent_sum<const N: usize>(nums: [usize; N]) -> usize {
-    non_adjacent_sum_with_cache(nums, 0, &mut HashMap::new())
+    nas_recursive(nums, 0, &mut HashMap::new())
 }
 
-pub fn non_adjacent_sum_with_cache<const N: usize>(
+pub fn nas_recursive<const N: usize>(
     nums: [usize; N],
     idx: usize,
-    cache: &mut HashMap<usize, usize>,
+    memo: &mut HashMap<usize, usize>,
 ) -> usize {
     // If the calculated value is in cache
     // then return it
-    if let Some(&value) = cache.get(&idx) {
+    if let Some(&value) = memo.get(&idx) {
         return value;
     }
 
@@ -29,12 +29,12 @@ pub fn non_adjacent_sum_with_cache<const N: usize>(
         return 0;
     }
 
-    let include = nums[idx] + non_adjacent_sum_with_cache(nums, idx + 2, cache);
-    let exclude = non_adjacent_sum_with_cache(nums, idx + 1, cache);
+    let include = nums[idx] + nas_recursive(nums, idx + 2, memo);
+    let exclude = nas_recursive(nums, idx + 1, memo);
 
     let result = include.max(exclude);
 
-    cache.insert(idx, result);
+    memo.insert(idx, result);
 
     result
 }

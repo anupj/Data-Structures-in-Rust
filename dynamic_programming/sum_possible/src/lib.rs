@@ -8,14 +8,14 @@ use std::collections::HashMap;
 /// many times as necessary.
 ///
 /// You may assume that the target amount is non-negative.
-pub fn sum_possible_with_cache<const N: usize>(
+pub fn sum_possible_recursive<const N: usize>(
     amount: isize,
     numbers: [isize; N],
-    cache: &mut HashMap<isize, bool>,
+    memo: &mut HashMap<isize, bool>,
 ) -> bool {
     // If the calculated value is in `cache`
     // then return it
-    if let Some(&value) = cache.get(&amount) {
+    if let Some(&value) = memo.get(&amount) {
         return value;
     }
 
@@ -31,8 +31,8 @@ pub fn sum_possible_with_cache<const N: usize>(
     }
 
     for num in numbers {
-        if sum_possible_with_cache(amount - num, numbers, cache) {
-            cache.insert(amount - num, true);
+        if sum_possible_recursive(amount - num, numbers, memo) {
+            memo.insert(amount - num, true);
             return true;
         }
     }
@@ -41,13 +41,12 @@ pub fn sum_possible_with_cache<const N: usize>(
     // cannot be found for this `amount`
     // so return false after recording it
     // in `cache`
-    cache.insert(amount, false);
+    memo.insert(amount, false);
     false
 }
 
 pub fn sum_possible<const N: usize>(amount: isize, numbers: [isize; N]) -> bool {
-    let mut cache = HashMap::new();
-    sum_possible_with_cache(amount, numbers, &mut cache)
+    sum_possible_recursive(amount, numbers, &mut HashMap::new())
 }
 
 #[cfg(test)]

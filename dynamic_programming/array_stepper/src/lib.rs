@@ -18,17 +18,17 @@ use std::collections::HashMap;
 /// The correct choice is to take 1 step to idx 1.
 /// Then take 4 steps forward to the end at idx 5.
 pub fn array_stepper<const N: usize>(nums: [usize; N]) -> bool {
-    array_stepper_with_cache(nums, 0, &mut HashMap::new())
+    as_recursive(nums, 0, &mut HashMap::new())
 }
 
-pub fn array_stepper_with_cache<const N: usize>(
+pub fn as_recursive<const N: usize>(
     nums: [usize; N],
     idx: usize,
-    cache: &mut HashMap<usize, bool>,
+    memo: &mut HashMap<usize, bool>,
 ) -> bool {
     // If the calculated value is in cache
     // then return it
-    if let Some(&value) = cache.get(&idx) {
+    if let Some(&value) = memo.get(&idx) {
         return value;
     }
 
@@ -38,13 +38,13 @@ pub fn array_stepper_with_cache<const N: usize>(
 
     let max_step = nums[idx];
     for step in 1..=max_step {
-        if array_stepper_with_cache(nums, idx + step, cache) {
-            cache.insert(idx, true);
+        if as_recursive(nums, idx + step, memo) {
+            memo.insert(idx, true);
             return true;
         }
     }
 
-    cache.insert(idx, false);
+    memo.insert(idx, false);
     false
 }
 

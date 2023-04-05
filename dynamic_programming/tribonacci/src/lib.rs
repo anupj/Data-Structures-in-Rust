@@ -35,7 +35,7 @@ pub fn tribonacci(n: usize, memo: &mut HashMap<usize, usize>) -> usize {
 /// Here's a more "idiomatic" way of writing
 /// the same function.
 /// I'll use `cache` instead of `memo`
-pub fn trib(n: usize, cache: &mut Vec<Option<usize>>) -> usize {
+pub fn trib_recursive(n: usize, cache: &mut Vec<Option<usize>>) -> usize {
     // If the cache already contains the value
     // return it
     if let Some(value) = cache[n] {
@@ -51,7 +51,9 @@ pub fn trib(n: usize, cache: &mut Vec<Option<usize>>) -> usize {
             1
         } else {
             // recursive case: trib(n) = trib(n-1) + trib(n-2) + trib(n-3)
-            trib(n - 1, cache) + trib(n - 2, cache) + trib(n - 3, cache)
+            trib_recursive(n - 1, cache)
+                + trib_recursive(n - 2, cache)
+                + trib_recursive(n - 3, cache)
         };
         cache[n] = Some(result);
         result
@@ -59,11 +61,11 @@ pub fn trib(n: usize, cache: &mut Vec<Option<usize>>) -> usize {
 }
 
 // A helper function that creates a cache and calls fib
-fn trib_with_cache(n: usize) -> usize {
+fn trib(n: usize) -> usize {
     // Create a vector of n+1 None values
     let mut cache = vec![None; n + 2];
     // Call fib with the cache
-    trib(n, &mut cache)
+    trib_recursive(n, &mut cache)
 }
 
 #[cfg(test)]
@@ -75,7 +77,7 @@ mod tests {
         let result = tribonacci(0, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 0);
 
-        let result = trib_with_cache(0);
+        let result = trib(0);
         assert_eq!(result, 0);
     }
 
@@ -84,7 +86,7 @@ mod tests {
         let result = tribonacci(1, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 0);
 
-        let result = trib_with_cache(1);
+        let result = trib(1);
         assert_eq!(result, 0);
     }
 
@@ -93,7 +95,7 @@ mod tests {
         let result = tribonacci(2, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 1);
 
-        let result = trib_with_cache(2);
+        let result = trib(2);
         assert_eq!(result, 1);
     }
 
@@ -102,7 +104,7 @@ mod tests {
         let result = tribonacci(5, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 4);
 
-        let result = trib_with_cache(5);
+        let result = trib(5);
         assert_eq!(result, 4);
     }
 
@@ -111,7 +113,7 @@ mod tests {
         let result = tribonacci(7, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 13);
 
-        let result = trib_with_cache(7);
+        let result = trib(7);
         assert_eq!(result, 13);
     }
 
@@ -120,7 +122,7 @@ mod tests {
         let result = tribonacci(14, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 927);
 
-        let result = trib_with_cache(14);
+        let result = trib(14);
         assert_eq!(result, 927);
     }
 
@@ -129,7 +131,7 @@ mod tests {
         let result = tribonacci(20, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 35890);
 
-        let result = trib_with_cache(20);
+        let result = trib(20);
         assert_eq!(result, 35890);
     }
 
@@ -138,7 +140,7 @@ mod tests {
         let result = tribonacci(37, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 1132436852);
 
-        let result = trib_with_cache(37);
+        let result = trib(37);
         assert_eq!(result, 1132436852);
     }
 
@@ -147,7 +149,7 @@ mod tests {
         let result = tribonacci(10, &mut HashMap::<usize, usize>::new());
         assert_eq!(result, 81);
 
-        let result = trib_with_cache(10);
+        let result = trib(10);
         assert_eq!(result, 81);
     }
 }

@@ -7,19 +7,19 @@ use std::collections::HashMap;
 /// any characters of the string, while maintaining the
 /// relative order of characters.
 pub fn max_palindrome(text: &str) -> usize {
-    max_palindrome_sub_sequence(text, 0, text.len() - 1, &mut HashMap::new())
+    max_palindrome_recursive(text, 0, text.len() - 1, &mut HashMap::new())
 }
 
-pub fn max_palindrome_sub_sequence(
+pub fn max_palindrome_recursive(
     text: &str,
     start_idx: usize,
     end_idx: usize,
-    cache: &mut HashMap<String, usize>,
+    memo: &mut HashMap<String, usize>,
 ) -> usize {
     let key = format!("{},{}", start_idx, end_idx);
     // If the value is in cache,
     // the return it - memoization ftw
-    if let Some(&value) = cache.get(&key) {
+    if let Some(&value) = memo.get(&key) {
         return value;
     }
 
@@ -31,15 +31,15 @@ pub fn max_palindrome_sub_sequence(
         return 0;
     }
 
-    let result = if text.chars().nth(start_idx) == text.chars().nth(end_idx) {
-        2 + max_palindrome_sub_sequence(text, start_idx + 1, end_idx - 1, cache)
-    } else {
-        max_palindrome_sub_sequence(text, start_idx + 1, end_idx, cache).max(
-            max_palindrome_sub_sequence(text, start_idx, end_idx - 1, cache),
-        )
-    };
+    let result =
+        if text.chars().nth(start_idx) == text.chars().nth(end_idx) {
+            2 + max_palindrome_recursive(text, start_idx + 1, end_idx - 1, memo)
+        } else {
+            max_palindrome_recursive(text, start_idx + 1, end_idx, memo)
+                .max(max_palindrome_recursive(text, start_idx, end_idx - 1, memo))
+        };
 
-    cache.insert(key, result);
+    memo.insert(key, result);
 
     result
 }

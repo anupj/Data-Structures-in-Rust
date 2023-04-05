@@ -8,13 +8,13 @@ use std::collections::HashMap;
 ///
 /// For example: 1, 4, 9, 16 are perfect squares, but 8 is not perfect square.
 pub fn summing_squares(num: isize) -> isize {
-    summing_squares_with_cache(num, &mut HashMap::new())
+    summing_squares_recursive(num, &mut HashMap::new())
 }
 
-pub fn summing_squares_with_cache(num: isize, cache: &mut HashMap<isize, isize>) -> isize {
+pub fn summing_squares_recursive(num: isize, memo: &mut HashMap<isize, isize>) -> isize {
     // If the calculated value is in cache
     // then return it
-    if let Some(&value) = cache.get(&num) {
+    if let Some(&value) = memo.get(&num) {
         return value;
     }
 
@@ -28,11 +28,11 @@ pub fn summing_squares_with_cache(num: isize, cache: &mut HashMap<isize, isize>)
 
     for i in 1..=sqrt_num {
         let square = i * i;
-        let num_squares = 1 + summing_squares_with_cache(num - square, cache);
+        let num_squares = 1 + summing_squares_recursive(num - square, memo);
         min_squares = min_squares.min(num_squares);
     }
 
-    cache.insert(num, min_squares);
+    memo.insert(num, min_squares);
 
     min_squares
 }

@@ -17,19 +17,19 @@ use std::collections::HashMap;
 /// 3. 1 + 3
 /// 4. 2 + 2
 pub fn counting_change<const N: usize>(amount: usize, coins: [usize; N]) -> usize {
-    counting_change_with_cache(amount, coins, 0, &mut HashMap::new())
+    cc_recursive(amount, coins, 0, &mut HashMap::new())
 }
 
-pub fn counting_change_with_cache<const N: usize>(
+pub fn cc_recursive<const N: usize>(
     amount: usize,
     coins: [usize; N],
     idx: usize,
-    cache: &mut HashMap<String, usize>,
+    memo: &mut HashMap<String, usize>,
 ) -> usize {
     let key = format!("{},{}", amount, idx);
     // If the calculated value is in cache
     // then return it
-    if let Some(&value) = cache.get(&key) {
+    if let Some(&value) = memo.get(&key) {
         return value;
     }
 
@@ -50,12 +50,12 @@ pub fn counting_change_with_cache<const N: usize>(
         }
 
         let remainder = amount - (coin * qty);
-        count += counting_change_with_cache(remainder, coins, idx + 1, cache);
+        count += cc_recursive(remainder, coins, idx + 1, memo);
 
         qty += 1;
     }
 
-    cache.insert(key, count);
+    memo.insert(key, count);
 
     count
 }

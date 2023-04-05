@@ -9,20 +9,20 @@ use std::collections::HashMap;
 /// to the bottom-right corner.
 ///
 pub fn max_path_sum<const N: usize>(grid: &[[usize; N]]) -> usize {
-    max_path_with_cache(grid, 0, 0, &mut HashMap::new())
+    mps_recursive(grid, 0, 0, &mut HashMap::new())
 }
 
-pub fn max_path_with_cache<const N: usize>(
+pub fn mps_recursive<const N: usize>(
     grid: &[[usize; N]],
     row_num: usize,
     col_num: usize,
-    cache: &mut HashMap<String, usize>,
+    memo: &mut HashMap<String, usize>,
 ) -> usize {
     let pos = format!("{},{}", row_num, col_num);
 
     // If the calculated value is in cache
     // then return it
-    if let Some(&value) = cache.get(&pos) {
+    if let Some(&value) = memo.get(&pos) {
         return value;
     }
 
@@ -34,11 +34,11 @@ pub fn max_path_with_cache<const N: usize>(
         return grid[row_num][col_num];
     }
 
-    let down_path = max_path_with_cache(grid, row_num + 1, col_num, cache);
-    let right_path = max_path_with_cache(grid, row_num, col_num + 1, cache);
+    let down_path = mps_recursive(grid, row_num + 1, col_num, memo);
+    let right_path = mps_recursive(grid, row_num, col_num + 1, memo);
 
     let result = grid[row_num][col_num] + down_path.max(right_path);
-    cache.insert(pos, result);
+    memo.insert(pos, result);
 
     result
 }

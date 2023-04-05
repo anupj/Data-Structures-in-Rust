@@ -9,20 +9,20 @@ use std::collections::HashMap;
 /// to the bottom-right corner.
 ///
 pub fn count_paths<const N: usize>(grid: &[[char; N]]) -> usize {
-    count_paths_with_cache(grid, 0, 0, &mut HashMap::new())
+    cp_recursive(grid, 0, 0, &mut HashMap::new())
 }
 
-pub fn count_paths_with_cache<const N: usize>(
+pub fn cp_recursive<const N: usize>(
     grid: &[[char; N]],
     row_num: usize,
     col_num: usize,
-    cache: &mut HashMap<String, usize>,
+    memo: &mut HashMap<String, usize>,
 ) -> usize {
     let pos = format!("{},{}", row_num, col_num);
 
     // If the calculated value is in cache
     // then return it
-    if let Some(&value) = cache.get(&pos) {
+    if let Some(&value) = memo.get(&pos) {
         return value;
     }
 
@@ -34,11 +34,11 @@ pub fn count_paths_with_cache<const N: usize>(
         return 1;
     }
 
-    let down_path = count_paths_with_cache(grid, row_num + 1, col_num, cache);
-    let right_path = count_paths_with_cache(grid, row_num, col_num + 1, cache);
+    let down_path = cp_recursive(grid, row_num + 1, col_num, memo);
+    let right_path = cp_recursive(grid, row_num, col_num + 1, memo);
 
     let result = down_path + right_path;
-    cache.insert(pos, result);
+    memo.insert(pos, result);
 
     result
 }
