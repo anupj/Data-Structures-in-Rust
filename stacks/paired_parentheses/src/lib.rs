@@ -1,3 +1,9 @@
+/// Takes in a string as an argument. The function
+/// should return a boolean indicating whether or not
+/// the string has well-formed parentheses.
+///
+/// You may assume the string contains only alphabetic
+/// characters, '(', or ')'.
 pub fn paired_parentheses(s: &str) -> bool {
     let mut count = 0;
 
