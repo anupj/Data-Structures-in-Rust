@@ -39,55 +39,55 @@ mod tests {
     use super::*;
 
     #[test]
-    fn paired_parentheses_00() {
+    fn befitting_brackets_00() {
         let result = befitting_brackets("(){}[](())");
         assert_eq!(result, true);
     }
 
     #[test]
-    fn paired_parentheses_01() {
+    fn befitting_brackets_01() {
         let result = befitting_brackets("({[]})");
         assert_eq!(result, true);
     }
 
     #[test]
-    fn paired_parentheses_02() {
+    fn befitting_brackets_02() {
         let result = befitting_brackets("[][}");
         assert_eq!(result, false);
     }
 
     #[test]
-    fn paired_parentheses_03() {
+    fn befitting_brackets_03() {
         let result = befitting_brackets("{[]}({}");
         assert_eq!(result, false);
     }
 
     #[test]
-    fn paired_parentheses_04() {
+    fn befitting_brackets_04() {
         let result = befitting_brackets("[]{}(}[]");
         assert_eq!(result, false);
     }
 
     #[test]
-    fn paired_parentheses_05() {
+    fn befitting_brackets_05() {
         let result = befitting_brackets("[]{}()[]");
         assert_eq!(result, true);
     }
 
     #[test]
-    fn paired_parentheses_06() {
+    fn befitting_brackets_06() {
         let result = befitting_brackets("]{}");
         assert_eq!(result, false);
     }
 
     #[test]
-    fn paired_parentheses_07() {
+    fn befitting_brackets_07() {
         let result = befitting_brackets("");
         assert_eq!(result, true);
     }
 
     #[test]
-    fn paired_parentheses_08() {
+    fn befitting_brackets_08() {
         let result = befitting_brackets("{[(}])");
         assert_eq!(result, false);
     }
