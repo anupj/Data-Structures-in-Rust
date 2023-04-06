@@ -13,39 +13,39 @@
 /// alphabetic characters.
 pub fn decompress_braces(s: &str) -> String {
     let mut stack = Vec::new();
-    let nums = "123456789";
 
     for c in s.chars() {
-        if nums.contains(c) {
-            // if its a number push it on
-            // top of the stack
-            stack.push(c.to_string());
-        } else if c == '}' {
-            // if its a closing brace
-            // then start unspooling the
-            // stack and create the expanded
-            // string
-            let mut segment = String::new();
-            // go through the stack until you
-            // hit a number
-            while stack.last().unwrap().parse::<usize>().is_err() {
-                let popped = stack.pop().unwrap();
-                segment = format!("{}{}", popped, segment);
+        match c {
+            '0'..='9' => {
+                // if its a number push it on
+                // top of the stack
+                stack.push(c.to_string());
             }
+            '}' => {
+                // if its a closing brace
+                // then start unspooling the stack
+                // and create the expanded string
+                let mut segment = String::new();
+                // Go through the stack until you hit
+                // a number
+                while stack.last().unwrap().parse::<usize>().is_err() {
+                    let popped = stack.pop().unwrap();
+                    segment = popped + &segment;
+                }
 
-            // Now get the number and...
-            let number = stack.pop().unwrap().parse::<usize>().unwrap();
-
-            // ..push the expanded string back on the stack
-            stack.push(segment.repeat(number));
-        } else if c != '{' {
-            // Ignore opening brace
-            // and push other characters
-            // on top of the stack
-            stack.push(c.to_string());
+                // Now get the number and ..
+                let number = stack.pop().unwrap().parse::<usize>().unwrap();
+                // ..push the expanded string back on to the stack
+                stack.push(segment.repeat(number));
+            }
+            '{' => {}
+            _ => {
+                // Push other characters on top
+                // of the stack
+                stack.push(c.to_string());
+            }
         }
     }
-
     // If the stack is empty means
     // we correctly matched all brackets
     stack.join("")
