@@ -6,43 +6,41 @@ use std::collections::HashMap;
 /// concatenating words of the array.
 /// You may reuse words of the array as many times
 /// as needed.
-pub fn quickest_concat<'a, const N: usize>(s: &'a str, words: [&'a str; N]) -> isize {
-    let result = quickest_concat_recursive(s, words, &mut HashMap::new());
-    if result == usize::MAX {
-        return -1;
+
+fn quickest_concat(s: &str, words: &[&str]) -> isize {
+    let result = _quickest_concat(s, words, &mut HashMap::new());
+
+    if result == isize::MAX - 1 {
+        -1
+    } else {
+        result
     }
-    result as isize
 }
 
-pub fn quickest_concat_recursive<'a, const N: usize>(
-    s: &'a str,
-    words: [&str; N],
-    memo: &mut HashMap<&'a str, usize>,
-) -> usize {
-    // If the calculated value is in cache
-    // then return it
-    if let Some(&value) = memo.get(s) {
-        return value;
+fn _quickest_concat(s: &str, words: &[&str], memo: &mut HashMap<String, isize>) -> isize {
+    if let Some(&min) = memo.get(s) {
+        return min;
     }
 
-    if s.len() == 0 {
+    if s.is_empty() {
         return 0;
     }
 
-    let mut min = usize::MAX;
+    // this is to avoid "attempt to add overflow"
+    // error when we add `1` to the
+    // `attempt` variable
+    let mut min = isize::MAX - 1;
+
     for word in words {
         if s.starts_with(word) {
-            let (_, suffix) = s.split_at(word.len());
+            let suffix = &s[word.len()..];
+            let attempt = 1 + _quickest_concat(suffix, words, memo);
 
-            let attempt = quickest_concat_recursive(suffix, words, memo);
-            if attempt < usize::MAX {
-                min = (attempt + 1).min(min);
-            }
+            min = min.min(attempt);
         }
     }
 
-    memo.insert(s, min);
-
+    memo.insert(s.to_string(), min);
     min
 }
 
@@ -52,52 +50,54 @@ mod tests {
 
     #[test]
     fn can_concat_00() {
-        let result = quickest_concat::<4>("caution", ["ca", "ion", "caut", "ut"]);
+        let result = quickest_concat("caution", &vec!["ca", "ion", "caut", "ut"]);
         assert_eq!(result, 2);
     }
 
     #[test]
     fn can_concat_01() {
-        let result = quickest_concat::<3>("caution", ["ion", "caut", "caution"]);
+        let result = quickest_concat("caution", &vec!["ion", "caut", "caution"]);
         assert_eq!(result, 1);
     }
 
     #[test]
     fn can_concat_02() {
-        let result =
-            quickest_concat::<5>("respondorreact", ["re", "or", "spond", "act", "respond"]);
+        let result = quickest_concat(
+            "respondorreact",
+            &vec!["re", "or", "spond", "act", "respond"],
+        );
         assert_eq!(result, 4);
     }
 
     #[test]
     fn can_concat_03() {
-        let result = quickest_concat::<4>("simchacindy", ["sim", "simcha", "acindy", "ch"]);
+        let result = quickest_concat("simchacindy", &vec!["sim", "simcha", "acindy", "ch"]);
         assert_eq!(result, 3);
     }
 
     #[test]
     fn can_concat_04() {
-        let result = quickest_concat::<3>("simchacindy", ["sim", "simcha", "acindy"]);
+        let result = quickest_concat("simchacindy", &vec!["sim", "simcha", "acindy"]);
         assert_eq!(result, -1);
     }
 
     #[test]
     fn can_concat_05() {
-        let result = quickest_concat::<4>("uuuuuu", ["u", "uu", "uuu", "uuuu"]);
+        let result = quickest_concat("uuuuuu", &vec!["u", "uu", "uuu", "uuuu"]);
         assert_eq!(result, 2);
     }
 
     #[test]
     fn can_concat_06() {
-        let result = quickest_concat::<2>("rongbetty", ["wrong", "bet"]);
+        let result = quickest_concat("rongbetty", &vec!["wrong", "bet"]);
         assert_eq!(result, -1);
     }
 
     #[test]
     fn can_concat_07() {
-        let result = quickest_concat::<5>(
+        let result = quickest_concat(
             "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
-            ["u", "uu", "uuu", "uuuu", "uuuuu"],
+            &vec!["u", "uu", "uuu", "uuuu", "uuuuu"],
         );
         assert_eq!(result, 7);
     }
