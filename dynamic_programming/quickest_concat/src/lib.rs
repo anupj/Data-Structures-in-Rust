@@ -7,7 +7,7 @@ use std::collections::HashMap;
 /// You may reuse words of the array as many times
 /// as needed.
 
-fn quickest_concat(s: &str, words: &[&str]) -> isize {
+pub fn quickest_concat(s: &str, words: &[&str]) -> isize {
     let result = _quickest_concat(s, words, &mut HashMap::new());
 
     if result == isize::MAX - 1 {
@@ -32,8 +32,7 @@ fn _quickest_concat(s: &str, words: &[&str], memo: &mut HashMap<String, isize>) 
     let mut min = isize::MAX - 1;
 
     for word in words {
-        if s.starts_with(word) {
-            let suffix = &s[word.len()..];
+        if let Some(suffix) = s.strip_prefix(word) {
             let attempt = 1 + _quickest_concat(suffix, words, memo);
 
             min = min.min(attempt);
