@@ -7,14 +7,16 @@
 pub fn paired_parentheses(s: &str) -> bool {
     let mut count = 0;
 
-    for ch in s.chars() {
-        if ch == '(' {
-            count += 1;
-        } else if ch == ')' {
-            if count == 0 {
-                return false;
+    for c in s.chars() {
+        match c {
+            '(' => count += 1,
+            ')' => {
+                if count == 0 {
+                    return false;
+                }
+                count -= 1;
             }
-            count -= 1;
+            _ => (),
         }
     }
 
