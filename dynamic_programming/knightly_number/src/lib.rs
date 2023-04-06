@@ -26,55 +26,49 @@ use std::collections::HashMap;
 /// of the board. You can assume that rows and columns
 /// are 0-indexed. This means that if n = 8, there are
 /// 8 rows and 8 columns numbered 0 to 7.
-pub fn knightly_number(n: isize, m: isize, kr: isize, kc: isize, pr: isize, pc: isize) -> usize {
-    knightly_number_recursive(n, m, kr, kc, pr, pc, &mut HashMap::new()) as usize
+pub fn knightly_number(n: usize, m: usize, kr: isize, kc: isize, pr: isize, pc: isize) -> usize {
+    knightly_number_recursive(n, m, kr, kc, pr, pc, &mut HashMap::new())
 }
 
 pub fn knightly_number_recursive(
-    n: isize,
-    m: isize,
+    n: usize,
+    m: usize,
     kr: isize,
     kc: isize,
     pr: isize,
     pc: isize,
-    memo: &mut HashMap<String, isize>,
-) -> isize {
+    memo: &mut HashMap<String, usize>,
+) -> usize {
     let key = format!("{},{},{}", m, kr, kc);
-    if let Some(&value) = memo.get(&key) {
-        return value;
+    if let Some(&count) = memo.get(&key) {
+        return count;
     }
 
-    if kr < 0 || kr >= n || kc < 0 || kc >= n {
+    if kr < 0 || kr >= n as isize || kc < 0 || kc >= n as isize {
         return 0;
     }
 
     if m == 0 {
-        if kr == pr && kc == pc {
-            return 1;
-        } else {
-            return 0;
-        }
+        return if kr == pr && kc == pc { 1 } else { 0 };
     }
 
     let neighbours = [
-        [kr + 2, kc + 1],
-        [kr - 2, kc + 1],
-        [kr + 2, kc - 1],
-        [kr - 2, kc - 1],
-        [kr + 1, kc + 2],
-        [kr - 1, kc + 2],
-        [kr + 1, kc - 2],
-        [kr - 1, kc - 2],
+        (kr + 2, kc + 1),
+        (kr - 2, kc + 1),
+        (kr + 2, kc - 1),
+        (kr - 2, kc - 1),
+        (kr + 1, kc + 2),
+        (kr - 1, kc + 2),
+        (kr + 1, kc - 2),
+        (kr - 1, kc - 2),
     ];
 
     let mut count = 0;
-    for neighbour in neighbours {
-        let neighbour_row = neighbour[0];
-        let neighbour_col = neighbour[1];
+    for &(neighbour_row, neighbour_col) in neighbours.iter() {
         count += knightly_number_recursive(n, m - 1, neighbour_row, neighbour_col, pr, pc, memo);
     }
-    memo.insert(key, count);
 
+    memo.insert(key, count);
     count
 }
 
