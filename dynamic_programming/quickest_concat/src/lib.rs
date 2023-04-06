@@ -34,7 +34,6 @@ fn _quickest_concat(s: &str, words: &[&str], memo: &mut HashMap<String, isize>) 
     for word in words {
         if let Some(suffix) = s.strip_prefix(word) {
             let attempt = 1 + _quickest_concat(suffix, words, memo);
-
             min = min.min(attempt);
         }
     }
